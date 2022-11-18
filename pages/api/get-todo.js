@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { database } from "../../utils/db";
+import NextCors from "nextjs-cors"
 import {
   setDoc,
   doc,
@@ -10,9 +11,16 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+import next from "next";
 export default async function handler(req, res) {
   console.log(req.query, "query");
   console.log(req.body, "body");
+  await NextCors(req, res, {
+    // Options
+    methods: ['POST',"GET"],
+    origin: ['http://localhost:3001/', 'http://localhost:3000/'],
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  })
   if (req.method == "GET") {
     const dbInstance = collection(database, "todo");
     const q = query(dbInstance);
